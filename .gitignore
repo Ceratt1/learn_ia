@@ -1,0 +1,85 @@
+# =========================
+# Java / JVM
+# =========================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.jpi
+*.hprof
+hs_err_pid*
+replay_pid*
+
+# =========================
+# Build outputs
+# =========================
+target/
+build/
+out/
+bin/
+gen/
+
+# Gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Maven
+.mvn/timing.properties
+
+# =========================
+# Logs & temporary files
+# =========================
+*.log
+logs/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# =========================
+# OS generated files
+# =========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# =========================
+# IDEs / Editors
+# =========================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+.factorypath
+.recommenders/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# VS Code
+.vscode/
+
+# =========================
+# Test / coverage / reports
+# =========================
+coverage/
+jacoco.exec
+surefire-reports/
+failsafe-reports/
+
+# =========================
+# Dependency / package caches
+# =========================
+.dependency-check/
