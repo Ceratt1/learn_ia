@@ -3,6 +3,7 @@ package com.learnia.publisher.api.controllers;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +24,9 @@ public class ReceiverController {
     @PutMapping(value = "/{uuidRequest}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<String> receive(
             @PathVariable(value = "uuidRequest", required = true) UUID uuidRequest,
+            @RequestPart(value = "uuidUser", required = true) String uuidUser,
+            @RequestPart(value = "description", required = false) @Length(max = 200) String description,
             @ValidPdfFiles(maxSizeMb = 100) @RequestPart("files") List<FilePart> files) {
-        return Mono.just("Received request with UUID: " + uuidRequest + " and files: " + files.size());
+        return Mono.just("Received request with uuidRequest: " + uuidRequest + ", uuidUser: " + uuidUser + ", description: " + description + ", and " + files.size() + " files.");
     }
 }

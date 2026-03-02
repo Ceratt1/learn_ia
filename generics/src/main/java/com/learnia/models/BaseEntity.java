@@ -6,29 +6,27 @@ import java.util.UUID;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 
+
 public abstract class BaseEntity {
     
     @Id
-    private UUID id;
+    private UUID uuid;
 
     @CreatedDate
     private OffsetDateTime createdAt;
     
     protected BaseEntity() {
-        if (this.id == null) {
-            this.id = UUID.randomUUID();
-        }
         if (this.createdAt == null) {
             this.createdAt = OffsetDateTime.now();
         }
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setUuid(UUID id) {
+        this.uuid = id;
     }
 
     public OffsetDateTime getCreatedAt() {
