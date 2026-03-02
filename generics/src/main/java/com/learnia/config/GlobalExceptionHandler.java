@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.ServerWebInputException;
 
@@ -33,16 +34,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WebExchangeBindException.class)
     public ResponseEntity<Object> handleBindException(WebExchangeBindException ex, ServerWebExchange exchange) {
-        return buildBadRequestValidationResponse(ex.getBindingResult().getFieldErrors(), exchange.getRequest().getPath().value());
+        return buildBadRequestValidationResponse(
+                ex.getBindingResult().getFieldErrors(),
+                exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
-        return buildBadRequestValidationResponse(ex.getBindingResult().getFieldErrors(), extractPath(request));
+    public ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            ServerWebExchange exchange) {
+        return buildBadRequestValidationResponse(
+                ex.getBindingResult().getFieldErrors(),
+                exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
+    public ResponseEntity<Object> handleConstraintViolation(
+            ConstraintViolationException ex,
+            ServerWebExchange exchange) {
         Map<String, String> fieldErrors = ex.getConstraintViolations().stream()
                 .collect(Collectors.toMap(
                         violation -> lastPathSegment(violation),
@@ -53,34 +62,44 @@ public class GlobalExceptionHandler {
         return buildResponse(
                 HttpStatus.BAD_REQUEST,
                 "Validation failed",
-                extractPath(request),
+                exchange.getRequest().getPath().value(),
                 fieldErrors);
     }
 
     @ExceptionHandler({
             IllegalArgumentException.class,
+            DecodingException.class,
             ServerWebInputException.class,
             MethodArgumentTypeMismatchException.class,
             HttpMessageNotReadableException.class
     })
-    public ResponseEntity<Object> handleBadRequest(Exception ex, WebRequest request) {
+    public ResponseEntity<Object> handleBadRequest(Exception ex, ServerWebExchange exchange) {
         String message = ex instanceof ServerWebInputException input && input.getReason() != null
                 ? input.getReason()
                 : ex.getMessage();
         return buildResponse(
                 HttpStatus.BAD_REQUEST,
                 defaultIfBlank(message, DEFAULT_BAD_REQUEST_MESSAGE),
-                extractPath(request),
+                exchange.getRequest().getPath().value(),
+                Collections.emptyMap());
+    }
+
+    @ExceptionHandler(MethodNotAllowedException.class)
+    public ResponseEntity<Object> handleMethodNotAllowed(MethodNotAllowedException ex, ServerWebExchange exchange) {
+        return buildResponse(
+                HttpStatus.METHOD_NOT_ALLOWED,
+                defaultIfBlank(ex.getReason(), "Request method is not supported for this endpoint"),
+                exchange.getRequest().getPath().value(),
                 Collections.emptyMap());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleUnexpectedException(Exception ex, WebRequest request) {
+    public ResponseEntity<Object> handleUnexpectedException(Exception ex, ServerWebExchange exchange) {
         log.error("Unhandled exception caught by global handler", ex);
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 DEFAULT_INTERNAL_ERROR_MESSAGE,
-                extractPath(request),
+                exchange.getRequest().getPath().value(),
                 Collections.emptyMap());
     }
 
@@ -118,10 +137,6 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.status(status).body(body);
-    }
-
-    private String extractPath(WebRequest request) {
-        return request.getDescription(false).replace("uri=", "");
     }
 
     private String lastPathSegment(ConstraintViolation<?> violation) {
