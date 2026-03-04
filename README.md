@@ -66,3 +66,21 @@ A troca de domínio acontece principalmente em três pontos:
 - **formato de saída esperado pelo serviço consumidor**.
 
 Ou seja, o pipeline de ingestão (upload -> extração -> geração -> persistência) permanece o mesmo, e só a camada de negócio específica muda.
+
+## Subindo Kafka com Docker Compose
+
+Para evitar subir o Kafka manualmente, use o `docker-compose.yml` da raiz do projeto:
+
+```bash
+docker compose up -d
+```
+
+Interface web do Kafka:
+
+- URL: `http://localhost:8080`
+
+Para parar/remover o container:
+
+```bash
+docker compose down
+```

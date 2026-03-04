@@ -1,4 +1,4 @@
-package com.learnia.validation;
+package com.learnia.validation.impl;
 
 import java.util.List;
 
@@ -6,6 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import com.learnia.validation.ValidPdfFiles;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

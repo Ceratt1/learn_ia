@@ -6,6 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.learnia.validation.impl.PdfFilesValidator;
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

@@ -1,4 +1,4 @@
-package com.learnia.config;
+package com.learnia.config.exceptions;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
