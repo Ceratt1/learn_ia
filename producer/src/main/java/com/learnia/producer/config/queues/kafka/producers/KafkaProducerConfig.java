@@ -1,23 +1,20 @@
-package com.learnia.publisher.config.queues.kafka.topics.producers;
+package com.learnia.producer.config.queues.kafka.producers;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
-import com.learnia.publisher.models.User;
-
-import tools.jackson.databind.annotation.JsonSerialize;
-import tools.jackson.databind.ser.jdk.StringSerializer;
-
-
+import com.learnia.producer.models.User;
+import com.learnia.producer.models.dto.UserEventDto;
 
 @Configuration
 public class KafkaProducerConfig {
@@ -29,18 +26,16 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<UUID, User> userFactory() {
+    public ProducerFactory<String, UserEventDto> userFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerialize.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
-    public KafkaTemplate<UUID, User> kafkaTemplate() {
-        return new org.springframework.kafka.core.KafkaTemplate<>(userFactory());
+    public KafkaTemplate<String, UserEventDto> kafkaTemplateUser() {
+        return new KafkaTemplate<>(userFactory());
     }
-
-
 }

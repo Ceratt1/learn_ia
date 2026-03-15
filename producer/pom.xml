@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.learnia</groupId>
-	<artifactId>publisher</artifactId>
+	<artifactId>producer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>publisher</name>
-	<description>Demo project for Spring Boot</description>
+	<name>producer</name>
+	<description>producer for learn ai</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -62,6 +62,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-kafka</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 		</dependency>
 	</dependencies>
 

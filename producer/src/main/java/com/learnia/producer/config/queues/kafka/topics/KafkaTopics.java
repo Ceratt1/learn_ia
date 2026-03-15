@@ -1,4 +1,4 @@
-package com.learnia.publisher.config.queues.kafka.topics;
+package com.learnia.producer.config.queues.kafka.topics;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.learnia.publisher.config.queues.kafka;
+package com.learnia.producer.config.queues.kafka;
 
 import java.util.HashMap;
 import java.util.Map;

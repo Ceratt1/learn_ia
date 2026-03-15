@@ -17,7 +17,7 @@ De forma resumida:
 
 ## Fluxo do sistema
 
-1. **Entrada (API / Publisher)**
+1. **Entrada (API / producer)**
 - Recebe upload de PDF(s).
 - Salva arquivos em storage (ex.: S3).
 - Cria registro de processamento no banco com status inicial (ex.: `PENDING`).
